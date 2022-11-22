@@ -1,0 +1,6 @@
+/* @import "./base.css";*/
+@import "https://orf.at/fonts/fonts.css";
+
+body {
+  font-family: var(--font-orfon);
+}
