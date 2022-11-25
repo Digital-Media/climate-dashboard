@@ -8,7 +8,7 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "name": "Tirol", "iso": "7" },
+      "properties": { "name": "Tirol", "iso": "7", "bbox_point": [12.819009511450858, 46.917531662989035] },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -213,7 +213,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Vorarlberg", "iso": "8" },
+      "properties": { "name": "Vorarlberg", "iso": "8", "bbox_point": [9.637723710860172, 47.51902358905906] },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -284,7 +284,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Wien", "iso": "9" },
+      "properties": { "name": "Wien", "iso": "9", "bbox_point": [16.48, 48.276008516001454]},
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -330,7 +330,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Burgenland", "iso": "1" },
+      "properties": { "name": "Burgenland", "iso": "1", "bbox_point": [16.09200488331858, 47.112900947470955] },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -508,7 +508,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Kärnten", "iso": "2" },
+      "properties": { "name": "Kärnten", "iso": "2", "bbox_point": [12.830858429966487, 46.610602599502784]},
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -640,7 +640,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Niederösterreich", "iso": "3" },
+      "properties": { "name": "Niederösterreich", "iso": "3", "bbox_point": [15.675945114743612, 47.699694878045619]},
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -901,7 +901,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Oberösterreich", "iso": "4" },
+      "properties": { "name": "Oberösterreich", "iso": "4", "bbox_point": [13.267308525551996, 47.892135525827619] },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -1091,7 +1091,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Salzburg", "iso": "5" },
+      "properties": { "name": "Salzburg", "iso": "5", "bbox_point": [12.58, 47.125586745956561] },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
@@ -1252,7 +1252,7 @@
     },
     {
       "type": "Feature",
-      "properties": { "name": "Steiermark", "iso": "6" },
+      "properties": { "name": "Steiermark", "iso": "6", "bbox_point": [13.985012729848352, 47.127811122529558] },
       "geometry": {
         "type": "MultiPolygon",
         "coordinates": [
