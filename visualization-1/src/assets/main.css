@@ -1,6 +1,29 @@
 /* @import "./base.css";*/
 @import "https://orf.at/fonts/fonts.css";
 
-body {
+:root {
+  /* Global font family */
   font-family: var(--font-orfon);
+
+  /* Global colors */
+  --color-yellow: rgb(255, 243, 128); /* #FFF380 */
+  --color-orange: rgb(255, 183, 58); /* #FFB73A */
+  --color-light-red: rgb(208, 53, 35); /* #D03523 */
+  --color-dark-red: rgb(130, 43, 40); /* #822B28 */
+}
+
+.bg-color-yellow {
+  background-color: var(--color-yellow);
+}
+
+.bg-color-orange {
+  background-color: var(--color-orange);
+}
+
+.bg-color-light-red {
+  background-color: var(--color-light-red);
+}
+
+.bg-color-dark-red {
+  background-color: var(--color-dark-red);
 }

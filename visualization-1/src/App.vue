@@ -1,7 +1,9 @@
 <template>
   <div>
-    <line-chart></line-chart>
     <map-austria></map-austria>
+    <!--
+      <line-chart></line-chart>
+    -->
   </div>
 </template>
 

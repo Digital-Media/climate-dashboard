@@ -4,12 +4,13 @@
 
 <script>
 import L from "leaflet";
-import { onMounted } from "@vue/runtime-core";
+import { onMounted, ref } from "@vue/runtime-core";
 import statesGeoData from "../assets/oesterreich.json";
 
 export default {
   name: "MapAustria",
   setup() {
+    let year = ref(1985);
     let useTodaysDate = true;
     let map;
     let base_url =
@@ -19,26 +20,52 @@ export default {
       initializeMap();
     });
 
+    function initializeMap() {
+      // Create Map
+      map = L.map("map").setView([47.59397, 14.12456], 7);
+
+      // Add Bundesland shapes to map
+      L.geoJson(statesGeoData, {
+        style: polystyle,
+        onEachFeature: onEachState,
+      }).addTo(map);
+
+      // Disable Zooming
+      map.touchZoom.disable();
+      map.doubleClickZoom.disable();
+      map.scrollWheelZoom.disable();
+      map.boxZoom.disable();
+      map.keyboard.disable();
+    }
+
     function onEachState(feature, layer) {
-      //TODO: Fetch multiple timedata sets and display them / the historical average
-      //TODO: Fetch current dataset and display for comparison
-      let year = 1985;
+      // TODO: Fetch multiple timedata sets and display them / the historical average
+      // TODO: Fetch current dataset and display for comparison
       let date = new Date();
       let dateString = useTodaysDate
-        ? `${year}-${date.getMonth()}-${date.getDay()}`
+        ? `${year.value}-${date.getMonth()}-${date.getDay()}`
         : "1985-01-01";
 
       fetch(getStateUrl(feature, dateString))
         .then((response) => response.json())
-        .then((data) => parseET0(data))
-        .then((data) =>
+        .then((data) => parseData(data))
+        .then((data) => {
           layer.bindPopup(
-            `<h3>${layer.feature.properties.name}</h3><p>${year}: &emsp;${data} kg/m&#0178;<p>`
-          )
-        );
+            `
+              <h3>${layer.feature.properties.name}</h3>
+              <p class="text-center">${dateString}<br>
+              ${data["ET0"]} kg/m&#0178;<br>
+              SPEI: ${data["SPEI"]}</p>
+            `
+          );
+          return data;
+        })
+        .then((data) => {
+          layer.setStyle({ fillColor: getFeatureColor(data) });
+        });
     }
 
-    //Calculates BBOX for each state and returns API Url
+    // Calculates BBOX for each state and returns API Url
     function getStateUrl(feature, date) {
       let [x, y] = feature.properties.bbox_point;
       let bbox = [
@@ -52,24 +79,49 @@ export default {
       return `${base_url}?parameters=ET0,SPEI&start=${date}T00:00&end=${date}T01:00&bbox=${bbox_string}`;
     }
 
-    function initializeMap() {
-      // Create Map
-      map = L.map("map").setView([47.59397, 14.12456], 7);
-
-      // Add Bundesland shapes to map
-      L.geoJson(statesGeoData, { onEachFeature: onEachState }).addTo(map);
-
-      // Disable Zooming
-      map.touchZoom.disable();
-      map.doubleClickZoom.disable();
-      map.scrollWheelZoom.disable();
-      map.boxZoom.disable();
-      map.keyboard.disable();
+    function getFeatureColor(data) {
+      const speiData = data["SPEI"];
+      const colors = {
+        green: "rgb(95, 181, 100)",
+        yellow: " rgb(255, 243, 128)",
+        orange: "rgb(255, 183, 58)",
+        lightRed: "rgb(208, 53, 35)",
+        darkRed: "rgb(130, 43, 40)",
+      };
+      if (speiData <= -0.7) {
+        return colors.darkRed;
+      } else if (speiData <= -0.5) {
+        return colors.lightRed;
+      } else if (speiData <= -0.2) {
+        return colors.orange;
+      } else if (speiData <= 0) {
+        return colors.yellow;
+      } else {
+        return colors.green;
+      }
     }
 
-    //Parses API results to return ET0 data (daily reference evapotranspiration in kg m-2)
+    function parseData(data) {
+      return { ET0: parseET0(data), SPEI: parseSPEI(data) };
+    }
+    // Parses API results to return ET0 data (daily reference evapotranspiration in kg m-2)
     function parseET0(data) {
       return data.features[0].properties.parameters.ET0.data[0];
+    }
+
+    // Parses API results to return SPEI data (multiscalar drought index)
+    function parseSPEI(data) {
+      return data.features[0].properties.parameters.SPEI.data[0];
+    }
+
+    function polystyle(feature) {
+      return {
+        fillColor: "grey",
+        weight: 2,
+        opacity: 1,
+        color: "white", //Outline color
+        fillOpacity: 1,
+      };
     }
 
     function fetchWeatherData() {
@@ -118,5 +170,9 @@ export default {
 <style scoped>
 #map {
   height: 500px;
+}
+
+.text-center {
+  text-align: center;
 }
 </style>
