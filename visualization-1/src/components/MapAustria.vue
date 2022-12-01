@@ -10,9 +10,10 @@ import statesGeoData from "../assets/oesterreich.json";
 export default {
   name: "MapAustria",
   setup() {
-    let useTodaysDate = true
+    let useTodaysDate = true;
     let map;
-    let base_url = "http://localhost:8010/proxy/v1/grid/historical/winfore-v1-1d-1km"
+    let base_url =
+      "http://localhost:8010/proxy/v1/grid/historical/winfore-v1-1d-1km"; // start proxy: lcp --proxyUrl https://dataset.api.hub.zamg.ac.at
 
     onMounted(() => {
       initializeMap();
@@ -21,23 +22,34 @@ export default {
     function onEachState(feature, layer) {
       //TODO: Fetch multiple timedata sets and display them / the historical average
       //TODO: Fetch current dataset and display for comparison
-      let year = 1985
+      let year = 1985;
       let date = new Date();
-      let dateString = useTodaysDate ? `${year}-${date.getMonth()}-${date.getDay()}` : "1985-01-01";
-      
+      let dateString = useTodaysDate
+        ? `${year}-${date.getMonth()}-${date.getDay()}`
+        : "1985-01-01";
+
       fetch(getStateUrl(feature, dateString))
         .then((response) => response.json())
         .then((data) => parseET0(data))
-        .then((data) => layer.bindPopup(`<h3>${layer.feature.properties.name}</h3><p>${year}: &emsp;${data} kg/m&#0178;<p>`));
+        .then((data) =>
+          layer.bindPopup(
+            `<h3>${layer.feature.properties.name}</h3><p>${year}: &emsp;${data} kg/m&#0178;<p>`
+          )
+        );
     }
 
     //Calculates BBOX for each state and returns API Url
     function getStateUrl(feature, date) {
       let [x, y] = feature.properties.bbox_point;
-      let bbox = [y.toFixed(2), x.toFixed(2), (y + parseFloat(0.01)).toFixed(2), (x + parseFloat(0.01)).toFixed(2)]
-      let bbox_string = `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`
+      let bbox = [
+        y.toFixed(2),
+        x.toFixed(2),
+        (y + parseFloat(0.01)).toFixed(2),
+        (x + parseFloat(0.01)).toFixed(2),
+      ];
+      let bbox_string = `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`;
 
-      return `${base_url}?parameters=ET0,SPEI&start=${date}T00:00&end=${date}T01:00&bbox=${bbox_string}`
+      return `${base_url}?parameters=ET0,SPEI&start=${date}T00:00&end=${date}T01:00&bbox=${bbox_string}`;
     }
 
     function initializeMap() {
@@ -72,7 +84,6 @@ export default {
         .then((data) => console.log(data))
         .then(initializeMap());
     }
-
 
     /*
     function fetchAllStateData() {
