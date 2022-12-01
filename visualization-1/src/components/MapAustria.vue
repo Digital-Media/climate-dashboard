@@ -1,10 +1,19 @@
 <template>
-  <div id="map"></div>
+  <div>
+    <div id="map"></div>
+    <div id="controls">
+      <select name="year" id="year" v-model="year">
+        <option v-for="i in 38" :value="1984 + i" :key="'option-' + i">
+          {{ 1984 + i }}
+        </option>
+      </select>
+    </div>
+  </div>
 </template>
 
 <script>
 import L from "leaflet";
-import { onMounted, ref } from "@vue/runtime-core";
+import { onMounted, ref, watch } from "@vue/runtime-core";
 import statesGeoData from "../assets/oesterreich.json";
 
 export default {
@@ -18,6 +27,11 @@ export default {
 
     onMounted(() => {
       initializeMap();
+    });
+
+    watch(year, (year, prevYear) => {
+      map = map.remove();
+      initializeMap(); // Reinitialize map when year changes
     });
 
     function initializeMap() {
@@ -104,6 +118,7 @@ export default {
     function parseData(data) {
       return { ET0: parseET0(data), SPEI: parseSPEI(data) };
     }
+
     // Parses API results to return ET0 data (daily reference evapotranspiration in kg m-2)
     function parseET0(data) {
       return data.features[0].properties.parameters.ET0.data[0];
@@ -163,6 +178,7 @@ export default {
 
     return {
       initializeMap,
+      year,
     };
   },
 };
