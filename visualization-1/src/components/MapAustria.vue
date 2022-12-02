@@ -2,6 +2,7 @@
   <div>
     <div id="map"></div>
     <div id="controls">
+      <span>{{ date.getDate() }}. {{ date.getMonth() + 1 }}. </span>
       <select name="year" id="year" v-model="year">
         <option v-for="i in 38" :value="1984 + i" :key="'option-' + i">
           {{ 1984 + i }}
@@ -20,6 +21,7 @@ export default {
   name: "MapAustria",
   setup() {
     let year = ref(1985);
+    let date = ref(new Date());
     let useTodaysDate = true;
     let map;
     let base_url =
@@ -55,9 +57,8 @@ export default {
     function onEachState(feature, layer) {
       // TODO: Fetch multiple timedata sets and display them / the historical average
       // TODO: Fetch current dataset and display for comparison
-      let date = new Date();
       let dateString = useTodaysDate
-        ? `${year.value}-${date.getMonth()}-${date.getDay()}`
+        ? `${year.value}-${date.value.getMonth() + 1}-${date.value.getDate()}`
         : "1985-01-01";
 
       fetch(getStateUrl(feature, dateString))
@@ -96,23 +97,30 @@ export default {
     function getFeatureColor(data) {
       const speiData = data["SPEI"];
       const colors = {
+        darkBlue: "#4371a3",
+        lightBlue: "#5286C1",
         green: "rgb(95, 181, 100)",
         yellow: " rgb(255, 243, 128)",
         orange: "rgb(255, 183, 58)",
         lightRed: "rgb(208, 53, 35)",
         darkRed: "rgb(130, 43, 40)",
       };
-      if (speiData <= -0.7) {
-        return colors.darkRed;
-      } else if (speiData <= -0.5) {
-        return colors.lightRed;
-      } else if (speiData <= -0.2) {
-        return colors.orange;
-      } else if (speiData <= 0) {
-        return colors.yellow;
-      } else {
+      if (speiData >= 1.5) {
+        return colors.darkBlue;
+      } else if (speiData >= 1) {
+        return colors.lightBlue;
+      } else if (speiData > 0) {
         return colors.green;
+      } else if (speiData >= -1) {
+        return colors.yellow;
+      } else if (speiData >= -1.5) {
+        return colors.orange;
+      } else if (speiData >= -2) {
+        return colors.lightRed;
+      } else if (speiData < -2) {
+        return colors.darkRed;
       }
+      return "grey";
     }
 
     function parseData(data) {
@@ -179,6 +187,7 @@ export default {
     return {
       initializeMap,
       year,
+      date,
     };
   },
 };
@@ -186,6 +195,11 @@ export default {
 <style scoped>
 #map {
   height: 500px;
+}
+
+#controls {
+  margin-top: 1rem;
+  text-align: center;
 }
 
 .text-center {
