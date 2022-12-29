@@ -1,6 +1,8 @@
 <template>
   <div>
-    <map-austria></map-austria>
+    <heat-bins></heat-bins>
+
+    <!-- <map-austria></map-austria> -->
     <!--
       <line-chart></line-chart>
     -->
@@ -9,13 +11,15 @@
 
 <script>
 import LineChart from "./components/LineChart.vue";
-import MapAustria from "./components/MapAustria.vue";
+// import MapAustria from "./components/MapAustria.vue";
+import HeatBins from "./components/HeatBins.vue";
 
 export default {
   name: "App",
   components: {
     LineChart,
-    MapAustria,
+    // MapAustria,
+    HeatBins,
   },
 };
 </script>
