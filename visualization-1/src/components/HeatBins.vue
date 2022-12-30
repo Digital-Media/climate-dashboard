@@ -1,13 +1,38 @@
 <template>
   <div>
     <div id="map"></div>
-    <div id="controls"></div>
+    <div id="controls">
+      <div class="color-scale-wrapper">
+        trocken
+        <div class="color-scale">
+          <div
+            v-for="colorValue in colorValues"
+            :key="colorValue"
+            :style="`background-color: ${colorValue}`"
+            class="legend-square"
+          ></div>
+        </div>
+        feucht
+      </div>
+      <div class="select-wrapper">
+        <select
+          v-model="selectedUrl"
+          @change="initializeMap()"
+          name="visualizations"
+          id="visualizations"
+        >
+          <option v-for="el in geotiffUrls" :key="el.text" :value="el.url">
+            {{ el.text }}
+          </option>
+        </select>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import L from "leaflet";
-import { onMounted, ref, watch } from "@vue/runtime-core";
+import { onMounted, reactive, ref, watch } from "vue";
 import statesGeoData from "../assets/oesterreich.json";
 
 import "georaster";
@@ -19,12 +44,23 @@ export default {
   name: "HeatBins",
   setup() {
     let map;
+    let geotiffUrls = reactive([
+      { text: "SPEI 20XX", url: "./austria_data_SPEI.tif" },
+      { text: "SPEI 07.08.2022", url: "./austria_data_SPEI_22_08_07.tif" },
+    ]);
+    let selectedUrl = ref("./austria_data_SPEI.tif");
+    const colorScale = "RdBu";
+    const colorValues = reactive(chroma.brewer[colorScale]);
 
     onMounted(() => {
       initializeMap();
     });
 
     function initializeMap() {
+      if (map) {
+        map.remove();
+      }
+
       // Create Map
       map = L.map("map").setView([47.59397, 14.12456], 7);
 
@@ -42,28 +78,25 @@ export default {
       }).addTo(map);
       geoJsonLayer.setZIndex(400);
 
-      var url_to_geotiff_file = "./austria_data_SPEI.tif";
-
       // Fetch GeoTiff file and render on GeoRasterLayer
-      fetch(url_to_geotiff_file)
+      fetch(selectedUrl.value)
         .then((response) => response.arrayBuffer())
         .then((arrayBuffer) => {
           parseGeoraster(arrayBuffer).then((georaster) => {
-            console.log("georaster:", georaster);
             const min = georaster.mins[0];
             const max = georaster.maxs[0];
             const range = georaster.ranges[0];
 
             console.log(chroma.brewer);
-            var scale = chroma.scale("RdYlGn");
+            var scale = chroma.scale(colorScale);
 
             var layer = new GeoRasterLayer({
               georaster: georaster,
               opacity: 0.7,
-              resolution: 64, // optional parameter for adjusting display resolution
+              resolution: 128, // optional parameter for adjusting display resolution
               pane: "top",
               pixelValuesToColorFn: function (pixelValues) {
-                const pixelValue = pixelValues[0]; // there's just one band in this raster
+                const pixelValue = pixelValues[0];
 
                 // Pixels with value -999 have no valid data
                 if (pixelValue === -999) return null;
@@ -101,6 +134,9 @@ export default {
 
     return {
       initializeMap,
+      geotiffUrls,
+      selectedUrl,
+      colorValues,
     };
   },
 };
@@ -114,6 +150,11 @@ export default {
 #controls {
   margin-top: 1rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 1rem;
 }
 
 .text-center {
@@ -122,5 +163,26 @@ export default {
 
 .leaflet-heatmap-layer {
   z-index: 500;
+}
+.color-scale-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-scale {
+  display: inline-block;
+  margin: 0 1rem;
+}
+
+.legend-square {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+}
+
+.select-wrapper {
+  width: 100%;
 }
 </style>
