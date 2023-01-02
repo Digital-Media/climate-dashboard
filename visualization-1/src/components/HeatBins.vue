@@ -34,6 +34,7 @@
 import L from "leaflet";
 import { onMounted, reactive, ref, watch } from "vue";
 import statesGeoData from "../assets/oesterreich.json";
+import borderGeoData from "../assets/austria_border.json";
 
 import "georaster";
 import "georaster-layer-for-leaflet";
@@ -46,6 +47,7 @@ export default {
     let map;
     let geotiffUrls = reactive([
       { text: "SPEI 20XX", url: "./austria_data_SPEI.tif" },
+      { text: "SPEI 01.01.2023", url: "./test_1_1.tiff" },
       { text: "SPEI 07.08.2022", url: "./austria_data_SPEI_22_08_07.tif" },
     ]);
     let selectedUrl = ref("./austria_data_SPEI.tif");
@@ -92,8 +94,10 @@ export default {
 
             var layer = new GeoRasterLayer({
               georaster: georaster,
+              mask: borderGeoData,
+              mask_strategy: "outside",
               opacity: 0.7,
-              resolution: 128, // optional parameter for adjusting display resolution
+              resolution: 200, // optional parameter for adjusting display resolution
               pane: "top",
               pixelValuesToColorFn: function (pixelValues) {
                 const pixelValue = pixelValues[0];
