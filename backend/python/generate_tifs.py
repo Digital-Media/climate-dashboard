@@ -12,7 +12,7 @@ output_format="netcdf"
 url=base_url+"parameters="+parameter+"&bbox="+bbox+"&output_format="+output_format
 
 #Set the month that should be generated
-check_date = date(2020, 10, 1)
+check_date = date(2019, 10, 1)
 for di in range(1, calendar.monthrange(check_date.year, check_date.month)[1]+1):
     #Generate URL for the date and fetch nc file from WINFORE dataset
     check_date = date(check_date.year, check_date.month, di)
