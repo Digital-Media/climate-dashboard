@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const { MongoClient } = require("mongodb");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const routes = require("./routes/routes");
 
@@ -21,6 +22,7 @@ database.once("connected", () => {
 });
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/api", routes);
 
