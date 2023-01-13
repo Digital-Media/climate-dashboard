@@ -26,6 +26,7 @@
           </option>
         </select>
       </div>
+      <time-line></time-line>
     </div>
   </div>
 </template>
@@ -41,8 +42,13 @@ import "georaster-layer-for-leaflet";
 
 import chroma from "chroma-js";
 
+import TimeLine from "./TimeLine.vue";
+
 export default {
   name: "HeatBins",
+  components: {
+    TimeLine,
+  },
   setup() {
     let map;
     let geotiffUrls = reactive([

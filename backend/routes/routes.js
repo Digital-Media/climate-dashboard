@@ -35,9 +35,9 @@ router.get("/availableTifs/weekly/:year/:week?", (req, res) => {
 
     const input = JSON.parse(data);
     if (week) {
-      res.send(input.dates_weekly[year][week]);
+      res.json(input.dates_weekly[year][week]);
     } else {
-      res.send(input.dates_weekly[year]);
+      res.json(input.dates_weekly[year]);
     }
   });
 });
@@ -51,11 +51,10 @@ router.get("/availableTifs/daily/:month", (req, res) => {
     const month = req.params.month;
 
     const input = JSON.parse(data);
-    res.send(input.dates_daily[month]);
+    res.json(JSON.stringify(input.dates_daily[month]));
   });
 });
 
-//Get all Method
 router.get("/convert", async (req, res) => {
   try {
     const fs = require("fs");
