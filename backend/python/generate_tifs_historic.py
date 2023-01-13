@@ -27,7 +27,7 @@ with open('../dates.json','r') as f:
     dates_json = json.load(f)
 
 for yi in range(start_date.year, current_date.year):
-    dates_json["dates_weekly"][yi] = {}
+    dates_json["dates_weekly"][str(yi)] = {}
 
     min_date = date(yi, 1, 1)
     max_date = date(yi, 12, 31)
@@ -46,9 +46,9 @@ for yi in range(start_date.year, current_date.year):
 
         nc = gdal.Open(str(filename))
         dest_path = '../data/tif/'+object_name+'.tif'
-        gdal.Warp(dest_path, nc, dstSRS='EPSG:4326', resampleAlg=gdal.GRA_Cubic, srcNodata=-999, dstNodata=-999)
+        gdal.Warp(dest_path, nc, dstSRS='EPSG:4326', creationOptions = ['TFW=NO', 'COMPRESS=LZW'],resampleAlg=gdal.GRA_Cubic, srcNodata=-999, dstNodata=-999, multithread=True)
 
-        dates_json["dates_weekly"][yi][str(index+1)] = wi.isoformat()
+        dates_json["dates_weekly"][str(yi)][str(index+1)] = wi.isoformat()
 
         with open('../dates.json','w') as f:
-            json.dump(dates_json, f)
+            json.dump(dates_json, f, indent=4)
