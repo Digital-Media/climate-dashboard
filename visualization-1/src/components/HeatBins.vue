@@ -32,7 +32,7 @@
 
 <script>
 import L from "leaflet";
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import statesGeoData from "../assets/oesterreich.json";
 import borderGeoData from "../assets/austria_border.json";
 

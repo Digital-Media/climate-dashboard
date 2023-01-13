@@ -1,53 +1,58 @@
 const express = require("express");
 const Model = require("../model/model");
+const path = require("path");
+const fs = require("fs");
 
 const router = express.Router();
 
 module.exports = router;
 
-//Post Method
-router.post("/post", async (req, res) => {
-  const data = new Model({
-    name: req.body.name,
-    age: req.body.age,
+router.get("/getTif/:date", (req, res, next) => {
+  var options = {
+    root: path.join(__dirname, "../data/tif"),
+  };
+  console.log(req.params.date);
+  var fileName = `AT_SPEI_${req.params.date}.tif`;
+  res.sendFile(fileName, options, function (err) {
+    if (err) {
+      res.send(
+        `No data for following date could be found: ${req.params.date}. Make sure the date is in following format: "JJJJ-MM-DD"`
+      );
+    } else {
+      console.log("Sent:", fileName);
+    }
   });
-
-  try {
-    const dataToSave = data.save();
-    res.status(200).json(dataToSave);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
 });
 
-//Get all Method
-router.get("/getAll", async (req, res) => {
-  try {
-    const data = await Model.find();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+router.get("/availableTifs/weekly/:year/:week?", (req, res) => {
+  fs.readFile(path.join(__dirname, "../dates.json"), "utf8", (err, data) => {
+    if (err) {
+      throw err;
+    }
+
+    const year = req.params.year;
+    const week = req.params.week;
+
+    const input = JSON.parse(data);
+    if (week) {
+      res.send(input.dates_weekly[year][week]);
+    } else {
+      res.send(input.dates_weekly[year]);
+    }
+  });
 });
 
-//Get by ID Method
-router.get("/getOne/:id", async (req, res) => {
-  try {
-    const data = await Model.findById(req.params.id);
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+router.get("/availableTifs/daily/:month", (req, res) => {
+  fs.readFile(path.join(__dirname, "../dates.json"), "utf8", (err, data) => {
+    if (err) {
+      throw err;
+    }
 
-//Update by ID Method
-router.patch("/update/:id", (req, res) => {
-  res.send("Update by ID API");
-});
+    const month = req.params.month;
 
-//Delete by ID Method
-router.delete("/delete/:id", (req, res) => {
-  res.send("Delete by ID API");
+    const input = JSON.parse(data);
+    res.send(input.dates_daily[month]);
+  });
 });
 
 //Get all Method
