@@ -1,13 +1,25 @@
 <template>
   <div class="timeline">
-    <div class="timeline-wrapper">
+    <div class="timeline__wrapper">
       <div v-if="!timelineData">loading</div>
       <div
         class="timeline__bullet"
         v-else
         v-for="el in timelineData"
+        @click="$emit('changeMap', el)"
         :key="el"
       ></div>
+      <div class="timeline__bullet timeline__bullet--empty"></div>
+    </div>
+    <div class="timeline__wrapper timeline__wrapper--margin-top">
+      <div v-for="i in 13" :key="`indicator-${i}`">
+        <div class="timeline__indicator"></div>
+      </div>
+    </div>
+    <div class="timeline__wrapper">
+      <div v-for="i in 13" :key="`indicator-${i}`">
+        <div v-if="i < 13">1.{{ i }}.</div>
+      </div>
     </div>
   </div>
 </template>
@@ -18,7 +30,7 @@ import { onMounted, ref } from "vue";
 export default {
   name: "TimeLine",
   setup() {
-    let timelineData = ref({});
+    const timelineData = ref({});
 
     onMounted(() => {
       fetch(`${import.meta.env.VITE_API_BASE_URL}/availableTifs/weekly/1963/`)
@@ -39,14 +51,30 @@ export default {
 .timeline {
   width: 100%;
 }
-.timeline-wrapper {
+.timeline__wrapper {
   display: flex;
   justify-content: space-between;
 }
 
+.timeline__wrapper--margin-top {
+  margin-top: 1rem;
+}
+
 .timeline__bullet {
-  width: 4px;
-  height: 4px;
-  background-color: coral;
+  width: 12px;
+  height: 12px;
+  background-color: grey;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.timeline__bullet--empty {
+  background: none;
+}
+
+.timeline__indicator {
+  height: 15px;
+  width: 2px;
+  background-color: black;
 }
 </style>

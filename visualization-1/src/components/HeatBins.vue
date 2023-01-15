@@ -2,6 +2,14 @@
   <div>
     <div id="map"></div>
     <div id="controls">
+      <time-line @change-map="(url) => switchMap(url)"></time-line>
+      <div class="select-wrapper">
+        <select v-model="year" name="visualizations" id="visualizations">
+          <option v-for="el in [1963, 1964]" :key="el" :value="el">
+            {{ el }}
+          </option>
+        </select>
+      </div>
       <div class="color-scale-wrapper">
         trocken
         <div class="color-scale">
@@ -14,19 +22,6 @@
         </div>
         feucht
       </div>
-      <div class="select-wrapper">
-        <select
-          v-model="selectedUrl"
-          @change="initializeMap()"
-          name="visualizations"
-          id="visualizations"
-        >
-          <option v-for="el in geotiffUrls" :key="el.text" :value="el.url">
-            {{ el.text }}
-          </option>
-        </select>
-      </div>
-      <time-line></time-line>
     </div>
   </div>
 </template>
@@ -51,12 +46,8 @@ export default {
   },
   setup() {
     let map;
-    let geotiffUrls = reactive([
-      { text: "SPEI 20XX", url: "./austria_data_SPEI.tif" },
-      { text: "SPEI 01.01.2023", url: "./test_1_1.tiff" },
-      { text: "SPEI 07.08.2022", url: "./austria_data_SPEI_22_08_07.tif" },
-    ]);
-    let selectedUrl = ref("./austria_data_SPEI.tif");
+    const selectedUrl = ref("./austria_data_SPEI.tif");
+    const year = ref(1963);
     const colorScale = "RdBu";
     const colorValues = reactive(chroma.brewer[colorScale]);
 
@@ -87,7 +78,7 @@ export default {
       geoJsonLayer.setZIndex(400);
 
       // Fetch GeoTiff file and render on GeoRasterLayer
-      fetch(selectedUrl.value)
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/getTif/${selectedUrl.value}`)
         .then((response) => response.arrayBuffer())
         .then((arrayBuffer) => {
           parseGeoraster(arrayBuffer).then((georaster) => {
@@ -132,7 +123,12 @@ export default {
       map.keyboard.disable();
     }
 
-    function polystyle(feature) {
+    function switchMap(url) {
+      selectedUrl.value = url;
+      initializeMap();
+    }
+
+    function polystyle() {
       return {
         fillColor: "grey",
         weight: 2,
@@ -144,9 +140,10 @@ export default {
 
     return {
       initializeMap,
-      geotiffUrls,
+      switchMap,
       selectedUrl,
       colorValues,
+      year,
     };
   },
 };
