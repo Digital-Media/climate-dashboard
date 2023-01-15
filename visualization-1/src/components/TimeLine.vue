@@ -25,15 +25,37 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 export default {
   name: "TimeLine",
-  setup() {
+  props: {
+    year: {
+      type: Number,
+      default: 2012,
+    },
+  },
+  setup(props) {
     const timelineData = ref({});
 
+    watch(
+      () => props.year,
+      () => {
+        fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/availableTifs/weekly/${
+            props.year
+          }`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            timelineData.value = data;
+            console.log(data);
+          });
+      }
+    );
+
     onMounted(() => {
-      fetch(`${import.meta.env.VITE_API_BASE_URL}/availableTifs/weekly/1963/`)
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/availableTifs/weekly/2022`)
         .then((response) => response.json())
         .then((data) => {
           timelineData.value = data;
@@ -42,6 +64,7 @@ export default {
     });
     return {
       timelineData,
+      props,
     };
   },
 };

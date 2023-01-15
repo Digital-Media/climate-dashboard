@@ -2,10 +2,10 @@
   <div>
     <div id="map"></div>
     <div id="controls">
-      <time-line @change-map="(url) => switchMap(url)"></time-line>
+      <time-line :year="year" @change-map="(url) => switchMap(url)"></time-line>
       <div class="select-wrapper">
         <select v-model="year" name="visualizations" id="visualizations">
-          <option v-for="el in [1963, 1964]" :key="el" :value="el">
+          <option v-for="el in availableYears" :key="el" :value="el">
             {{ el }}
           </option>
         </select>
@@ -47,13 +47,23 @@ export default {
   setup() {
     let map;
     const selectedUrl = ref("./austria_data_SPEI.tif");
+    const availableYears = ref([]);
     const year = ref(1963);
     const colorScale = "RdBu";
     const colorValues = reactive(chroma.brewer[colorScale]);
 
     onMounted(() => {
+      loadAvailableYears();
       initializeMap();
     });
+
+    function loadAvailableYears() {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/availableTifs/weekly`)
+        .then((response) => response.json())
+        .then((data) => {
+          availableYears.value = data;
+        });
+    }
 
     function initializeMap() {
       if (map) {
@@ -144,6 +154,7 @@ export default {
       selectedUrl,
       colorValues,
       year,
+      availableYears,
     };
   },
 };

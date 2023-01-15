@@ -42,6 +42,24 @@ router.get("/availableTifs/weekly/:year/:week?", (req, res) => {
   });
 });
 
+router.get("/availableTifs/weekly", (req, res) => {
+  fs.readFile(path.join(__dirname, "../dates.json"), "utf8", (err, data) => {
+    if (err) {
+      throw err;
+    }
+    const input = JSON.parse(data);
+    let years = [];
+    try {
+      for (const [key, value] of Object.entries(input.dates_weekly)) {
+        years.push(Number(key));
+      }
+      res.json(years);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+});
+
 router.get("/availableTifs/daily/:month", (req, res) => {
   fs.readFile(path.join(__dirname, "../dates.json"), "utf8", (err, data) => {
     if (err) {
