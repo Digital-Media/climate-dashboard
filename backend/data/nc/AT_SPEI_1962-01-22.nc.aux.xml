@@ -1,0 +1,38 @@
+<PAMDataset>
+  <Subdataset name="SPEI">
+    <PAMDataset>
+      <PAMRasterBand band="1">
+        <Metadata>
+          <MDI key="STATISTICS_MAXIMUM">16</MDI>
+          <MDI key="STATISTICS_MEAN">-1.5444078421339</MDI>
+          <MDI key="STATISTICS_MINIMUM">-19</MDI>
+          <MDI key="STATISTICS_STDDEV">6.7501146678135</MDI>
+        </Metadata>
+      </PAMRasterBand>
+    </PAMDataset>
+  </Subdataset>
+  <Subdataset name="lat">
+    <PAMDataset>
+      <PAMRasterBand band="1">
+        <Metadata>
+          <MDI key="STATISTICS_MAXIMUM">49.186531066895</MDI>
+          <MDI key="STATISTICS_MEAN">47.75678557818</MDI>
+          <MDI key="STATISTICS_MINIMUM">46.305110931396</MDI>
+          <MDI key="STATISTICS_STDDEV">0.81536231251652</MDI>
+        </Metadata>
+      </PAMRasterBand>
+    </PAMDataset>
+  </Subdataset>
+  <Subdataset name="lon">
+    <PAMDataset>
+      <PAMRasterBand band="1">
+        <Metadata>
+          <MDI key="STATISTICS_MAXIMUM">17.382892608643</MDI>
+          <MDI key="STATISTICS_MEAN">13.380022547598</MDI>
+          <MDI key="STATISTICS_MINIMUM">9.3795347213745</MDI>
+          <MDI key="STATISTICS_STDDEV">2.2537812614652</MDI>
+        </Metadata>
+      </PAMRasterBand>
+    </PAMDataset>
+  </Subdataset>
+</PAMDataset>
