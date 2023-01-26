@@ -28,7 +28,6 @@
 
 <script>
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { onMounted, reactive, ref } from "vue";
 import statesGeoData from "../assets/oesterreich.json";
 import borderGeoData from "../assets/austria_border.json";
@@ -94,8 +93,10 @@ export default {
         .then((response) => response.arrayBuffer())
         .then((arrayBuffer) => {
           parseGeoraster(arrayBuffer).then((georaster) => {
-            const min = georaster.mins[0];
-            const max = georaster.maxs[0];
+            // const min = georaster.mins[0];
+            // const max = georaster.maxs[0];
+            const minFixed = -25;
+            const maxFixed = 25;
             const range = georaster.ranges[0];
 
             console.log(chroma.brewer);
@@ -115,7 +116,8 @@ export default {
                 if (pixelValue === -999) return null;
 
                 // scale to 0 - 1 used by chroma
-                const scaledPixelValue = (pixelValue - min) / range; // (pixelValue - min) / (max - min)
+                const scaledPixelValue =
+                  (pixelValue - minFixed) / (maxFixed - minFixed); //(pixelValue - min) / range;
                 let color = scale(scaledPixelValue).hex();
 
                 return color;
