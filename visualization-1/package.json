@@ -19,6 +19,21 @@
     "vue": "^3.2.41",
     "vue-echarts": "^6.2.3"
   },
+  "overrides": {
+    "georaster-layer-for-leaflet": {
+      "proj4-fully-loaded": "^0.2.0",
+      "reproject-bbox": {
+        "proj4-fully-loaded": "^0.2.0"
+      },
+      "geocanvas": {
+        "geomask": {
+          "reproject-geojson": {
+            "proj4-fully-loaded": "^0.2.0"
+          }
+        }
+      }
+    }
+  },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
     "@vitejs/plugin-vue": "^3.1.2",

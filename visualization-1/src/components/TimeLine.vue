@@ -3,7 +3,7 @@
     <div class="timeline__wrapper">
       <div v-if="!timelineData">loading</div>
       <div
-        class="timeline__bullet"
+        class="timeline__bullet bg-color-yellow"
         v-else
         v-for="el in timelineData"
         @click="$emit('changeMap', el)"
@@ -69,35 +69,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.timeline {
-  width: 100%;
-}
-.timeline__wrapper {
-  display: flex;
-  justify-content: space-between;
-}
-
-.timeline__wrapper--margin-top {
-  margin-top: 1rem;
-}
-
-.timeline__bullet {
-  width: 12px;
-  height: 12px;
-  background-color: grey;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.timeline__bullet--empty {
-  background: none;
-}
-
-.timeline__indicator {
-  height: 15px;
-  width: 2px;
-  background-color: black;
-}
-</style>

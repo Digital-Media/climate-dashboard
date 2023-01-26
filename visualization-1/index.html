@@ -5,15 +5,19 @@
     <link rel="icon" href="/favicon.ico" />
     <link
       rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-      crossorigin=""
+      type="text/css"
+      href="https://orf.at/fonts/fonts.css"
     />
+    <style>
+      body {
+        font-family: var(--font-orfon);
+      }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ZAMG Data Visualizations</title>
   </head>
   <body>
-    <div id="app"></div>
+    <humidity-map></humidity-map>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

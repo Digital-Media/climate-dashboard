@@ -1,6 +1,8 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+// Defining a WebComponent for integrating the visualization into other pages and environments
+// See https://vuejs.org/guide/extras/web-components.html#building-custom-elements-with-vue
 
-import './assets/main.css'
+import { defineCustomElement } from "vue";
+import HumidityMap from "./components/HumidityMap.ce.vue";
 
-createApp(App).mount('#app')
+export const HumidityMapComponent = defineCustomElement(HumidityMap);
+customElements.define("humidity-map", HumidityMapComponent);
